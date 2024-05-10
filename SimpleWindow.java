@@ -16,7 +16,7 @@ public class SimpleWindow extends Frame {
 	int size = 1000;
 	Plane plane;
 	float[][] map;
-	int seed = 1028;
+	int seed = 1024;
 	float scale = 50f;
 	
 	SimpleWindow() {
