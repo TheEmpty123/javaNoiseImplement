@@ -17,8 +17,10 @@ public class SimpleWindow extends Frame {
 	Plane plane;
 	float[][] map;
 	int seed = 1024;
-	float scale = 50f;
-	
+	float scale = 100f;
+	boolean useFalloff = true, rep = true;
+	JLabel img;
+
 	SimpleWindow() {
 		super("My First Window");
 		setSize(size, size);
@@ -35,59 +37,75 @@ public class SimpleWindow extends Frame {
 
 	}
 
-	float[][] createFalloffMap(int size){
-		float [][] falloffMap = FalloffMappArrayTest.createFalloffArray(size);
+	float[][] createFalloffMap() {
+		float[][] falloffMap = FalloffMappArrayTest.createFalloffArray(size);
 		return falloffMap;
 	}
-	
-	float[][] createWhiteNoiseMap(int seed, int size){
-		
+
+	float[][] createWhiteNoiseMap(int seed, int size) {
+
 		NoiseMapTest NSG = new NoiseMapTest(size, size, seed);
-		
+
 		float[][] whiteNoiseMap = NSG.generateWhiteNoiseMap(seed);
 		return whiteNoiseMap;
 	}
-	
-	float[][] createPerlinNoiseMap(int seed){
+
+	float[][] createPerlinNoiseMap(int seed) {
 		NoiseMapTest NSG = new NoiseMapTest(size, size, seed);
 		float[][] noiseMap = NSG.noiseGenerate(seed, scale);
-		
+
+		if (useFalloff) {
+			float[][] falloffMap = createFalloffMap();
+
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					noiseMap[i][j] -= falloffMap[i][j];
+				}
+			}
+
+		}
+
 		return noiseMap;
 	}
-	
-	public float[][] test(){
+
+	public float[][] test() {
 		PerlinNoise t = new PerlinNoise();
 		return t.noiseGenerate(scale);
 	}
-	
+
 	void init() {
-//		map = FalloffMappArrayTest.createFalloffArray(size);
+//		map = createFalloffMap();
 //		map = createWhiteNoiseMap(seed, size);
 		map = createPerlinNoiseMap(seed);
 //		map = test();
+
 		plane = new Plane(size, size);
 		plane.drawPlane(map);
-		JLabel img = new JLabel(new ImageIcon(plane.bImage));
+
+		if (rep) {
+			rep = false;
+			if (img != null)
+				this.remove(img);
+			else
+				img = new JLabel(new ImageIcon(plane.bImage));
+		}
+
 		this.add(img);
-		
+
 //		printArray(map);
+//		System.out.println(size + " " + map.length);
 	}
-	
-	void redrawPlane() {
-		map = FalloffMappArrayTest.createFalloffArray(size);
-		plane.setSize(size);
-		plane.drawPlane(map);
-	}
-	
+
 	@Override
 	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
 		super.paint(g);
 		size = this.getWidth();
 		setSize(size, size);
-		redrawPlane();
+		rep = true;
+		init();
 	}
-	
+
 	public static void printArray(float[][] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr.length; j++) {

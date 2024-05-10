@@ -21,7 +21,7 @@ public class NoiseMapTest {
 	public float[][] noiseGenerate(int seed, float scale) {
 		generateGrid();
 		initializeGradients();
-		float minHeight = Float.MAX_VALUE, maxHeight = Float.MIN_VALUE;
+//		float minHeight = Float.MAX_VALUE, maxHeight = Float.MIN_VALUE;
 
 		if (scale <= 1)
 			scale = 1.1f;
@@ -33,10 +33,10 @@ public class NoiseMapTest {
 
 				float value = perlinNoise(sampleX, sampleY);
 
-				if (value < minHeight)
-					minHeight = value;
-				if (value > maxHeight)
-					maxHeight = value;
+//				if (value < minHeight)
+//					minHeight = value;
+//				if (value > maxHeight)
+//					maxHeight = value;
 //				if(value < 0) value = Math.abs(value);
 
 				map[x][y] = value + 0.5f;
@@ -44,7 +44,7 @@ public class NoiseMapTest {
 		}
 
 //		float avg = (maxHeight + minHeight);
-		System.out.println(minHeight + " " + maxHeight);
+//		System.out.println(minHeight + " " + maxHeight);
 //		for (int y = 0; y < height; y++) {
 //			for (int x = 0; x < width; x++) {
 //				map[x][y] += avg;
@@ -86,9 +86,9 @@ public class NoiseMapTest {
 		return finalValue;
 	}
 
-	private float lerp(double a0, double a1, double w) {
-		return (float) ((1.0 - w) * a0 + w * a1);
-	}
+//	private float lerp(double a0, double a1, double w) {
+//		return (float) ((1.0 - w) * a0 + w * a1);
+//	}
 
 	private float interpolate(double a, double b, double t) {
 		// Interpolate using cosine interpolation
