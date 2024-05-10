@@ -2,16 +2,37 @@ package FalloffMapTest;
 
 public class PerlinNoise {
 
-    private static final int GRID_SIZE = 100;
+    private static final int GRID_SIZE = 1000;
     private static final double[][] gradients = generateGradients(GRID_SIZE);
+    float[][] map = new float[GRID_SIZE][GRID_SIZE];
+    float minHeight = Float.MIN_VALUE, maxHeight = Float.MAX_VALUE;
 
     public static void main(String[] args) {
-        double x = 0.5;
-        double y = 0.5;
+        double x = 1;
+        double y = 2;
         double noiseValue = perlinNoise(x, y);
         System.out.println("Perlin noise value at (" + x + ", " + y + "): " + noiseValue);
     }
 
+	public float[][] noiseGenerate(float scale) {
+		
+		if(scale <= 1) scale = 1.1f;
+		
+		for (int y = 0; y < GRID_SIZE; y++) {
+			for (int x = 0; x < GRID_SIZE; x++) {
+				float sampleX = x / scale;
+				float sampleY = y / scale;
+				
+				float value = perlinNoise(sampleX, sampleY);
+				if(value < minHeight) minHeight = value;
+				if(value > maxHeight) maxHeight = value;
+				map[x][y] = value;
+			}
+		}
+		
+		return map;
+	}
+    
     private static double[][] generateGradients(int size) {
         double[][] gradients = new double[size][size];
         // Generate random gradient vectors
@@ -24,7 +45,7 @@ public class PerlinNoise {
         return gradients;
     }
 
-    private static double perlinNoise(double x, double y) {
+    private static float perlinNoise(double x, double y) {
         int x0 = (int) x;
         int y0 = (int) y;
         int x1 = x0 + 1;
@@ -55,10 +76,10 @@ public class PerlinNoise {
         return dx * gradients[ix][iy] + dy * gradients[ix][iy];
     }
 
-    private static double interpolate(double a, double b, double t) {
+    private static float interpolate(double a, double b, double t) {
         // Interpolate using cosine interpolation
         double ft = t * Math.PI;
         double f = (1 - Math.cos(ft)) * 0.5;
-        return a * (1 - f) + b * f;
+        return (float) (a * (1 - f) + b * f);
     }
 }

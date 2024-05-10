@@ -17,6 +17,7 @@ public class SimpleWindow extends Frame {
 	Plane plane;
 	float[][] map;
 	int seed = 1028;
+	float scale = 50f;
 	
 	SimpleWindow() {
 		super("My First Window");
@@ -41,19 +42,35 @@ public class SimpleWindow extends Frame {
 	
 	float[][] createWhiteNoiseMap(int seed, int size){
 		
-		NoiseMapTest NSG = new NoiseMapTest(size, size);
+		NoiseMapTest NSG = new NoiseMapTest(size, size, seed);
 		
 		float[][] whiteNoiseMap = NSG.generateWhiteNoiseMap(seed);
 		return whiteNoiseMap;
 	}
 	
+	float[][] createPerlinNoiseMap(int seed){
+		NoiseMapTest NSG = new NoiseMapTest(size, size, seed);
+		float[][] noiseMap = NSG.noiseGenerate(seed, scale);
+		
+		return noiseMap;
+	}
+	
+	public float[][] test(){
+		PerlinNoise t = new PerlinNoise();
+		return t.noiseGenerate(scale);
+	}
+	
 	void init() {
 //		map = FalloffMappArrayTest.createFalloffArray(size);
-		map = createWhiteNoiseMap(seed, size);
+//		map = createWhiteNoiseMap(seed, size);
+		map = createPerlinNoiseMap(seed);
+//		map = test();
 		plane = new Plane(size, size);
 		plane.drawPlane(map);
 		JLabel img = new JLabel(new ImageIcon(plane.bImage));
 		this.add(img);
+		
+//		printArray(map);
 	}
 	
 	void redrawPlane() {
@@ -71,5 +88,12 @@ public class SimpleWindow extends Frame {
 		redrawPlane();
 	}
 	
-	
+	public static void printArray(float[][] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr.length; j++) {
+				System.out.print(arr[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
 }
